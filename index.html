@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. G.'s Educational Links</title>
+  <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+  <link href="/normalize.css" rel="stylesheet" type="text/css" media="all">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+</head>
+
+<body data-bind="class: darkMode">
+<div id="page-container">
+<div id="content-wrap">
+
+  <button onclick="topFunction()" id="back-to-top-button" title="Go to top">⌃</button>
+  
+  <button data-bind="click: darkModeFunc" id="dark-mode-button" title="Dark Mode">
+    <span data-bind="if: darkModeBool" class="dark-mode-button-text">☼️</span>
+    <span data-bind="ifnot: darkModeBool" class="dark-mode-button-text">☾</span>
+  </button>
+  
+  
+  <div id="sticky-search-header">
+    <button data-bind="click: ascendingSortFunc" class="sort-list-button"  title="Sort List">
+      <svg class="icon icon-alphabet-sort" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14.94 4.66h-4.72l2.36-2.36 2.36 2.36zm-4.69 14.71h4.66l-2.33 2.33-2.33-2.33zM6.1 6.27L1.6 17.73h1.84l.92-2.45h5.11l.92 2.45h1.84L7.74 6.27H6.1zm-1.13 7.37l1.94-5.18 1.94 5.18H4.97zm10.76 2.5h6.12v1.59h-8.53v-1.29l5.92-8.56h-5.88v-1.6h8.3v1.26l-5.93 8.6z"/></svg>
+    </button>
+
+    <input type="text"  data-bind="value: searchText, valueUpdate: 'keyup', event: { 'keyup': search }" placeholder="Search.." id="search-bar"/>
+    
+    <button data-bind="click: resetList" class="reset-list-button"  title="Reset List">
+      <svg class="icon icon-reset" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z M20,13c0-4.42-3.58-8-8-8c-0.06,0-0.12,0.01-0.18,0.01l1.09-1.09L11.5,2.5L8,6l3.5,3.5l1.41-1.41 l-1.08-1.08C11.89,7.01,11.95,7,12,7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02C16.95,20.44,20,17.08,20,13z"/></g></g></svg>
+    </button>
+  </div>
+  
+  <h1 id="header">Educational Links for the Tech Ed</h1>
+    
+  <div data-bind="foreach: category">
+    <h3 data-bind="text: name, visible: showCategory"></h3>
+    <ul data-bind="foreach: links">
+      
+      <li data-bind="visible: showLink">
+        <a class="card" target="_blank" data-bind="attr: { href: url, title: title }">
+            <div class="container">
+              <span class="link-font" data-bind="text: text"></span>
+            </div>
+        </a>
+      </li>
+        
+    </ul>
+  </div>
+
+</div>
+<footer id="footer">
+<hr/>
+</footer>
+</div>
+
+<script type="text/javascript" src="/data.js"></script>
+
+<script>
+
+function SiteCategory(category) {
+    let self = this;
+    self.name = category.name;
+    
+    category.links.forEach(x=>{
+      x.showLink = ko.observable(true)  
+    })
+    self.links = ko.observableArray([...category.links]); 
+    
+    self.showCategory = ko.computed(function() {
+      return self.links().some(x=>x.showLink())
+    });
+}
+
+let vm = new function () {
+  let self = this;
+  
+  self.darkModeBool = ko.observable(
+    localStorage.getItem('darkModeBool') == 'true' ? true : false
+  );
+  self.darkMode = ko.computed(function() {
+    localStorage.setItem('darkModeBool', self.darkModeBool())
+    return self.darkModeBool() ? 'dark-mode' : 'light-mode';
+  });
+  self.darkModeFunc = function() {
+    self.darkModeBool( self.darkModeBool() ? false : true )  
+  }
+  
+  let siteCategoryArr = data.map(x=>new SiteCategory(x))
+  self.category = ko.observableArray(siteCategoryArr);
+  
+  self.ascendingSort = ko.observable(true)
+  self.categorySort = () => {
+    if(self.ascendingSort()) {
+      self.category.sort(function(a,b){
+          return a.name === b.name ? 0
+                   : a.name < b.name ? -1 : 1;
+      })()
+    } else {
+      self.category.sort(function(a,b){
+          return a.name === b.name ? 0
+                   : a.name > b.name ? -1 : 1;
+      })()
+    }  
+  }
+  
+  self.listSort = ko.computed(() => {
+    self.categorySort()
+    
+    self.category().forEach((x)=>{
+      if(self.ascendingSort()) {
+        x.links.sort(function(a,b){
+            return a.text === b.text ? 0
+                     : a.text < b.text ? -1 : 1;
+        })()
+      } else {
+        x.links.sort(function(a,b){
+            return a.text === b.text ? 0
+                     : a.text > b.text ? -1 : 1;
+        })()
+      }  
+    })
+  })
+  
+  self.ascendingSortFunc = function() {
+    self.ascendingSort( self.ascendingSort() ? false : true )  
+  }
+  
+  self.searchText = ko.observable('');
+  
+  self.search = function() {
+    let re = new RegExp(self.searchText(), 'i');
+    
+    self.category().forEach(x => {
+      x.links().forEach(y => {
+        let test = re.test(x.name + ' ' +y.text)
+        y.showLink( test )
+      })
+    })
+  }
+  
+  self.resetList = function() { 
+    self.searchText('')
+    
+    self.category().forEach(x => {
+      x.links().forEach(y => {
+        y.showLink( true )
+      })
+    })
+  }
+}
+
+ko.applyBindings(vm);
+
+//https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_scroll_to_top
+//Get the button
+var backToTopBtn = document.getElementById('back-to-top-button');
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    backToTopBtn.style.display = "block";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+</script>
+
+</body>
+
+</html>
