@@ -27,7 +27,7 @@ button {
   background-color:  rgba(0, 120, 200, 0.5);
   color: white;
   font-weight: 600;
-  border: none;
+  border: 4px solid rgba(0, 0, 0, 0);
   border-radius: 8px;
   cursor: pointer;
 }
@@ -103,7 +103,6 @@ button:hover {
 .sort-list-button {
   flex-grow: 0;
   font-weight: 900;
-  border: none;
   display: inline-block;
   border-radius: 4px;
   cursor: pointer;

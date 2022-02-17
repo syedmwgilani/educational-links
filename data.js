@@ -6,13 +6,11 @@ SAMPLE OF CATEGORY OBJECT
   links: [
     {
       text: 'Google',
-      url: 'https://www.google.com',
-      title: 'Google'
+      url: 'https://www.google.com'
     },
     {
       text: 'Yahoo',
-      url: 'https://www.yahoo.com',
-      title: 'Yahoo'
+      url: 'https://www.yahoo.com'
     }
   ]
 }
@@ -25,13 +23,11 @@ let data = [
     links: [
       {
         text: 'Google',
-        url: 'https://www.google.com',
-        title: 'Google'
+        url: 'https://www.google.com'
       },
       {
         text: 'Yahoo',
-        url: 'https://www.yahoo.com',
-        title: 'Yahoo'
+        url: 'https://www.yahoo.com'
       }
     ]
   }
