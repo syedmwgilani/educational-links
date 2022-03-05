@@ -75,6 +75,11 @@ button:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
+.outer-container {
+  margin: auto;
+  max-width: 84.5ch;
+  padding: 0.625rem;
+}
 .container {
   padding: 1rem;
 }

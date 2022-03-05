@@ -34,21 +34,23 @@
     </button>
   </div>
   
-  <h1 id="header">Educational Links - Tech Ed</h1>
+  <div class="outer-container">
+    <h1 id="header">Educational Links - Tech Ed</h1>
     
-  <div data-bind="foreach: category">
-    <h3 data-bind="text: name, visible: showCategory"></h3>
-    <ul data-bind="foreach: links">
-      
-      <li data-bind="visible: showLink">
-        <a class="card" target="_blank" data-bind="attr: { href: url, title: text }">
-            <div class="container">
-              <span class="link-font" data-bind="text: text"></span>
-            </div>
-        </a>
-      </li>
+    <div data-bind="foreach: category">
+      <h3 data-bind="text: name, visible: showCategory"></h3>
+      <ul data-bind="foreach: links">
         
-    </ul>
+        <li data-bind="visible: showLink">
+          <a class="card" target="_blank" data-bind="attr: { href: url, title: text }">
+              <div class="container">
+                <span class="link-font" data-bind="text: text"></span>
+              </div>
+          </a>
+        </li>
+          
+      </ul>
+    </div>
   </div>
 
 </div>
